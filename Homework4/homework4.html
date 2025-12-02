@@ -1,0 +1,367 @@
+  <!--
+Program name: homework4.html
+Author: Annie Pham
+ Date Created: 2025-12-02
+ Date Updated: 2025-12-08
+Version: 3.5
+Description: Patient Registration Form to create new patient account and obtain demographic information
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta   charset="utf-8">
+
+        <title>Anhie's Homework #4</title>
+
+        <!-- external CSS styles -->
+        <link rel="stylesheet" href="style-4.css">
+
+    </head>
+
+<!-- HEADING -->
+    <body>
+        <div id="header">
+            <table width=100%>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img
+                            id="logo"
+                            src=Phamlogo.png alt="Medical Logo"
+                            width="100px" height="100px"
+                            >
+                        </td>
+                        <td valign="bottom" align="right"><h1>THE PHAMILY HOSPITAL</h1>
+                        </td>
+                        <td valign="bottom" align="right">Today's Date: <span id="today"></span>
+                        </td> 
+                        <!-- Javascript for today's date -->
+                        <script>   
+                            const d = new Date();
+                            let text = d.toLocaleDateString();
+                            document.getElementById("today").innerHTML= text;
+                        </script>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+ <hr>
+
+<!-- BODY -->
+        <div id="body"><form name="signup" id="signup" onreset="removedata1()" action="hw4-thankyou.html">
+            <table class="form">
+                <tbody>
+                    <tr class="form">
+                    <th class="form" colspan="2"><h2>New Patient Registration Form</h2>*required fields</th>
+                    </tr>
+            <!-- First Name, (MI) --> 
+                    <tr class="form" >
+                        <td align="right">
+                            <label for="first_name">*First,</label>
+                            <label for="MI_initial">(MI initial):</label>
+                        </td>   
+                        <td> <!-- Name Constraints: only letters and hyphen are allowed --> 
+                            <input type="text" size="25" id="first_name" name="first_name" pattern="[A-Za-z'-]{1,30}" maxlength="30"  placeholder="*First Name" required oninvalid="this.setCustomValidity('First Name is invalid')"    oninput="this.setCustomValidity(''); checkFirstName();" title="minimum 1 character: only letters, spaces, '', -, and spaces are allowed">
+                            <input type="text" size="2"  id="MI_initial" name="MI_initial" pattern="[A-Za-z]{1}"        maxlength="1"   placeholder="MI"             oninvalid="this.setCustomValidity('only letters are allowed')"  oninput="this.setCustomValidity('')" title="only letters are allowed">                    
+                            <sub>
+                                <span id="first_name_text"></span>
+                                <span id="good_count"></span>
+                            </sub>
+                        </td>                   
+                    </tr>
+
+            <!-- Last Name --> 
+                    <tr class="form" >
+                        <td align="right">
+                            <label for="last_name">*Last Name:</label>
+                        </td>   
+                        <td> <!-- Name Constraints: only letters and hyphen are allowed --> 
+                            <input type="text" size="25" id="last_name" name="last_name" pattern="[A-Za-z'-]{1,30}" maxlength="30"  placeholder="*Last Name" required oninvalid="this.setCustomValidity('Last Name is invalid')"    oninput="this.setCustomValidity(''); checkLastName();" title="minimum 1 character: only letters, spaces, '', -, and spaces are allowed">
+                            <sub>
+                                <span id="last_name_text"></span>
+                                <span id="good_count_1"></span>
+                            </sub>
+                        </td>                   
+                    </tr>                    
+
+            <!-- Date of Birth --> 
+                    <tr class="form">
+                        <td align="right">
+                            <label for="DOB">*Date of Birth:</label>
+                        </td>
+                        <td>
+                            <input type="date" id="DOB" name="DOB" required oninvalid="this.setCustomValidity('Date of Birth is Invalid')" oninput="this.setCustomValidity(''); validateDOB();">
+                            <sub> <span id ="dob_text"></span></sub>
+                        </td>
+                    </tr>
+
+            <!-- Social Security # -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="SSN">*SSN:</label>
+                        </td>
+                        <td>
+                            <input type="tel" id="SSN" name="phone" pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}" placeholder="111-22-3333" required oninvalid="this.setCustomValidity('Phone Number is Required')" oninput="this.setCustomValidity('')" title="Please enter as the exact format">
+                            <span id="SSN_text"></span>
+                        </td>
+                    </tr>
+
+            <!-- Email -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="email">*Email:</label>
+                        </td>
+                        <td>
+                            <input type="email" size="30" maxlength="40" id="email" name="email" placeholder="name@domain.tld" required>
+                            <span id="email_text"></span>
+                        </td>
+                    </tr>
+
+            <!-- Phone Number -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="phone">*Phone Number:</label>
+                        </td>
+                        <td>
+                            <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="111-333-4444" required oninvalid="this.setCustomValidity('Phone Number is Required')" oninput="this.setCustomValidity('')" title="Please enter as the exact format">
+                            <span id="phone_text"></span>
+                        </td>
+                    </tr>
+
+            <!-- Address Line -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="address_1">*Address Line 1:</label>
+                        </td>
+                        <td> 
+                            <input type="text" size="30" minlength="2" maxlength="30" id="address_1" name="address_1" pattern="^[0-9]{1,10}\s+[0-9A-za-z\s\-]+$" placeholder="1111 Red Line St" required oninvalid="this.setCustomValidity('Street Address is Required')" oninput="this.setCustomValidity('')" title="only street number followed by street address are allowed">
+                        </td>
+                    </tr>
+
+                    <tr class="form">
+                        <td align="right">
+                            <label for="address_2">Adress Line 2:</label>
+                        </td>
+                        <td>
+                            <input type="text" size="30" maxlength="30" id="address_2" name="address_2" placeholder="Apt# (Optional)" title="Optional to include additional information regarding address line">
+                        </td>
+                    </tr>
+            <!-- City, State, Zipcode -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="city">*City,</label>
+                            <label for="state">State,</label>
+                            <label for="zip">ZIP:</label>
+                            <label for"zip2"></label>
+                        </td>
+                        <td colspan="3">
+                            <!-- City -->
+                            <input type="text" size="12" maxlength="30" id="city" name="city" pattern="[A-Za-z\s\-]{2,30}" placeholder="*City" required oninvalid="this.setCustomValidity('Address-City is Required')" oninput="this.setCustomValidity('')" title="only letters and hyphens are allowed">
+                            <!-- State -->
+                            <select id="state" name="state"                                                                               required oninvalid="this.setCustomValidity('Address-State is Required')" oninput="this.setCustomValidity('')">
+                                <option value="" selected="selected">*Select a State</option>
+                                <option value="AL">Alabama</option>
+                                <option value="AK">Alaska</option>
+                                <option value="AZ">Arizona</option>
+                                <option value="AR">Arkansas</option>
+                                <option value="CA">California</option>
+                                <option value="CO">Colorado</option>
+                                <option value="CT">Connecticut</option>
+                                <option value="DE">Delaware</option>
+                                <option value="DC">District Of Columbia</option>
+                                <option value="FL">Florida</option>
+                                <option value="GA">Georgia</option>
+                                <option value="HI">Hawaii</option>
+                                <option value="ID">Idaho</option>
+                                <option value="IL">Illinois</option>
+                                <option value="IN">Indiana</option>
+                                <option value="IA">Iowa</option>
+                                <option value="KS">Kansas</option>
+                                <option value="KY">Kentucky</option>
+                                <option value="LA">Louisiana</option>
+                                <option value="ME">Maine</option>
+                                <option value="MD">Maryland</option>
+                                <option value="MA">Massachusetts</option>
+                                <option value="MI">Michigan</option>
+                                <option value="MN">Minnesota</option>
+                                <option value="MS">Mississippi</option>
+                                <option value="MO">Missouri</option>
+                                <option value="MT">Montana</option>
+                                <option value="NE">Nebraska</option>
+                                <option value="NV">Nevada</option>
+                                <option value="NH">New Hampshire</option>
+                                <option value="NJ">New Jersey</option>
+                                <option value="NM">New Mexico</option>
+                                <option value="NY">New York</option>
+                                <option value="NC">North Carolina</option>
+                                <option value="ND">North Dakota</option>
+                                <option value="OH">Ohio</option>
+                                <option value="OK">Oklahoma</option>
+                                <option value="OR">Oregon</option>
+                                <option value="PA">Pennsylvania</option>
+                                <option value="RI">Rhode Island</option>
+                                <option value="SC">South Carolina</option>
+                                <option value="SD">South Dakota</option>
+                                <option value="TN">Tennessee</option>
+                                <option value="TX">Texas</option>
+                                <option value="UT">Utah</option>
+                                <option value="VT">Vermont</option>
+                                <option value="VA">Virginia</option>
+                                <option value="WA">Washington</option>
+                                <option value="WV">West Virginia</option>
+                                <option value="WI">Wisconsin</option>
+                                <option value="WY">Wyoming</option>
+                            </select>
+                            <!-- Zipcode -->
+                            <input type="tel" size="6" minlength="5" maxlength="10" pattern="^\d{5}(-\d{4})?$" name="zip"  placeholder="*12345-0000" required oninvalid="this.setCustomValidity('Address-ZIPCODE is Required')" oninput="this.setCustomValidity('')"> 
+                        </td>
+                    </tr>
+
+            <!-- Textbox of current symptoms (if any) -->
+                    <tr class="form">
+                        <td align="right" valign="top">
+                            <label for="symptoms">Current Symptoms<br>(if any):</label>
+                        </td>
+                        <td>
+                            <textarea 
+                                rows="3" cols="50" id="symptoms" name="symptoms" wrap="hard" maxlength="50">
+                            </textarea>
+                        </td>
+                    </tr>
+            <!-- Gender -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="gender">*Gender: </label>
+                        </td>
+                        <td> 
+                            <label><input type="radio" name="gender" value="Yes" required oninvalid="this.setCustomValidity('Flu-vaccine field is Required')" oninput="this.setCustomValidity('')">Male </label>
+                            <label><input type="radio" name="gender" value="No">Female</label>
+                        </td>
+                    </tr>
+            <!-- Question 1: Flu vaccinaton -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="flu_vaccine">*Have you received a flu-vaccine in the past 12 months?: </label>
+                        </td>
+                        <td> 
+                            <label><input type="radio" name="flu_vaccine" value="Yes" required oninvalid="this.setCustomValidity('Flu-vaccine field is Required')" oninput="this.setCustomValidity('')">Yes </label>
+                            <label><input type="radio" name="flu_vaccine"  value="No">No</label>
+                        </td>
+                    </tr>
+            <!-- Question 2: Diagnosis -->
+                    <tr class="form">
+                        <td align="right">*Have you ever been diagnosed with any of the following conditions?:</td>
+                        <td>
+                            <label><input type="radio" name="diagnosis" value="Yes" required oninvalid="this.setCustomValidity('Diagnosis field is Required')" oninput="this.setCustomValidity('')">Yes </label>
+                            <label><input type="radio" name="diagnosis"  value="No">No</label>
+                        </td>
+                    </tr>
+            <!-- Checkbox for all diagnoses that apply -->
+                    <tr class="form">
+                        <td align="right" valign="top">
+                            <label for="med_check">Check all that apply<br>(optional):</label>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="med_check" value="Diabetes">Diabetes<br>
+                            <input type="checkbox" name="med_check" value="High Blood Pressure">High Blood Pressure<br>
+                            <input type="checkbox" name="med_check" value="Asthma">Asthma<br>
+                            <input type="checkbox" name="med_check" value="Heart Disease">Heart Disease<br>
+                            <input type="checkbox" name="med_check" value="Arthritis">Arthritis<br>
+                        </td>
+                    </tr>
+            <!-- Question 3: Rate how patient feels via patient desired salary   -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="budget">If you are currently unhappy with your financial state,<br>what is your desired salary (per year)?<br></label>
+                        </td>
+                        <td align="center">
+                            $20,000
+                            <input type="range" class="budget_scale" id="budget" name="budget" min="20000" max="200000" step="1000">
+                            $200,000
+                            <br>$
+                            <span id="rangedisplay">1000</span>
+                        </td>
+                    </tr>
+
+            <!-- Setup UserID -->
+                    <tr class="form">
+                        <td align="right" valign="top">
+                            <label for="userid">*User ID:</label>
+                        </td>
+                        <td> 
+                            <input type="text" size="20" minlength="5" maxlength="30" id="userid" name="userid" pattern="^[a-z]{4,}[0-9_-]+$" 
+                            placeholder="johndoe123" required oninvalid="this.setCustomValidity('User ID is invalid')" oninput="this.setCustomValidity('')">
+                            <span id="user_text" class="wine-red"></span>
+                            <span id="good_count_user"></span>
+                            <sub><i>Required at least 4 letters followed by at least a number, underscore or dash</i></sub>
+                        </td>
+                    </tr>
+
+
+            <!-- Password -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="pass">*Password:</label>
+                        </td>
+                        <td>
+                            <input type="password" size="20" maxlength="30" id="pass" name="pass" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#%^&*()\-_=+\\/><.,`~]).{8,}"
+                            oninvalid="this.setCustomValidity('Password must meet all requirements')" oninput="this.setCustomValidity('')" required>
+                            <span id="pass_text" class="wine-red"></span>
+                            <sub><i>Required at least 8 characters: 1 uppercase, 1 lowercase, 1 number and 1 special character (!@#%^&*()\-_=+\\/><.,`~)</i></sub>
+                        </td>
+                    </tr>
+            <!-- Re-enter Password -->
+                    <tr class="form">
+                        <td align="right">
+                            <label for="re_pass">*Confirm Password:</label>
+                        </td>
+                        <td>
+                            <input type="password" size="20" maxlength="30" id="re_pass" name="re_pass"
+                            oninvalid="this.setCustomValidity('Please re-enter your Password')" oninput="this.setCustomValidity('')" required>
+                        <span id="repass_text" class="wine-red"></span>
+                        </td>
+                    </tr>
+            <!-- Buttons: 'Start Over' and 'Submit' -->
+                    <tr>
+                        <td colspan="3">
+                            <center>
+                            &nbsp;           
+                            <input type="reset" value="Clear Form">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" value="Review" onclick="getdata1()">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="submit" value="Submit">
+                            </center>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> </form>
+        </div>
+
+        <div id="outputformdata"></div>
+<!-- External Javascript -->
+<script src = "hw4.js"></script>
+    </body>
+ <hr>
+ 
+ <!-- FOOTER -->
+    <footer>
+        <div id="footer">
+            <img
+                id="logo"
+                src=Phamlogo.png alt="Medical Logo"
+                width="80px" height="80px" align="left"
+            >
+            <f1>THE PHAMILY HOSPITAL</f1>
+
+            <!-- Footer: Buttons: Contact Us! -->
+            <button class="button">Contact Us!</button>
+
+            <br><f2>
+            13425 Demure St,<br>
+            Sugar Land, TX 77496
+            </f2>
+        </div>
+    </footer>
+</html>

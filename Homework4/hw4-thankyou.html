@@ -1,0 +1,118 @@
+  <!--
+ Name: Annie Pham
+ File: hw4-thankyou.html
+ Date Created: 2025-12-02
+ Date Updated: 2025-12-08
+ Purpose: Thankyou Form for MIS 7375 HW4
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta   charset="utf-8">
+
+        <title>Anhie's Homework #4</title>
+
+        <!-- external CSS styles -->
+        <link rel="stylesheet" href="style-3.css">
+    </head>
+
+    <body>
+        <div id="header">
+            <table width=100%>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img
+                            id="logo"
+                            src=Phamlogo.png alt="Medical Logo"
+                            width="100px" height="100px"
+                            >
+                        </td>
+                        <td valign="bottom" align="right"><h1>THE PHAMILY HOSPITAL</h1></td>
+                        <td valign="bottom" align="right">Today's Date: <span id="today">9/24/2025</span>
+                        </td> 
+                        <!-- Javascript for today's date -->
+                        <script>   
+                            const d = new Date();
+                            let text = d.toLocaleDateString();
+                            document.getElementById("today").innerHTML= text;
+                            </script>    
+                        </td> 
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+ <hr>
+        <div id="body">
+            <table class="form">
+                <tbody>
+                    <tr class="form">
+                        <th class="form" colspan="2"><h2>New Patient Registration Form</h2>RECEIVED</th>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </div>
+
+                    <tr class="form" >
+                        <td>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br><center><h4>Thank you for your submission!</h4></center>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                        </td>   
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+
+ <hr>
+    <!-- Footer: Buttons: Contact Us! -->
+    <footer>
+        <div id="footer">
+            <img
+                id="logo"
+                src=Phamlogo.png alt="Medical Logo"
+                width="80px" height="80px" align="left"
+            >
+        
+            <f1>THE PHAMILY HOSPITAL</f1>
+            <button class="button">Contact Us!</button>
+
+            <br><f2>
+            13425 Demure St,<br>
+            Sugar Land, TX 77496
+            </f2>
+        </div>
+    </footer>
+</html>
