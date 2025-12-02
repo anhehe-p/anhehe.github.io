@@ -20,7 +20,7 @@ Description: Patient Registration Form to create new patient account and obtain 
 
 <!-- HEADING -->
     <body>
-        <div id="header">
+        <div id="header" class="sticky-header">
             <table width=100%>
                 <tbody>
                     <tr>
@@ -33,7 +33,12 @@ Description: Patient Registration Form to create new patient account and obtain 
                         </td>
                         <td valign="bottom" align="right"><h1>THE PHAMILY HOSPITAL</h1>
                         </td>
-                        <td valign="bottom" align="right">Today's Date: <span id="today"></span>
+                        <td valign="bottom" align="right">
+                            <div style="margin-bottom: 10px;">
+                                <a href="dashboard.html" style="margin-right: 15px; color: #4d311f; text-decoration: none; font-weight: bold;">📊 Dashboard</a>
+                                <a href="patient-data.html" style="color: #4d311f; text-decoration: none; font-weight: bold;">📋 Patient Data</a>
+                            </div>
+                            Today's Date: <span id="today"></span>
                         </td> 
                         <!-- Javascript for today's date -->
                         <script>   
@@ -339,6 +344,14 @@ Description: Patient Registration Form to create new patient account and obtain 
             </table> </form>
         </div>
 
+        <!-- Patient Information Section (Fetched via Fetch API) -->
+        <div id="patient-info-container" style="margin: 20px; padding: 15px; background-color: #e8f4f8; border: 2px solid #4d311f; border-radius: 8px;"></div>
+
+        <!-- iFrame Container for Related Content -->
+        <div id="iframe-container" style="margin: 20px; padding: 15px; background-color: white; border: 2px solid #ccc; border-radius: 8px; display: none;">
+            <!-- iFrame content loads here -->
+        </div>
+
         <div id="outputformdata"></div>
 <!-- External Javascript -->
 <script src = "hw4.js"></script>
@@ -346,7 +359,7 @@ Description: Patient Registration Form to create new patient account and obtain 
  <hr>
  
  <!-- FOOTER -->
-    <footer>
+    <footer class="sticky-footer">
         <div id="footer">
             <img
                 id="logo"

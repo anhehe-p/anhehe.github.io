@@ -128,3 +128,63 @@ th.form
   font-weight: bold;
   color: #555;
 }
+
+/* Success and Error Message Styles */
+.success-message {
+  background-color: #d4edda;
+  border: 2px solid #28a745;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  color: #155724;
+  font-family: Arial, sans-serif;
+}
+
+.success-message h3 {
+  color: #155724;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+}
+
+.success-message p {
+  margin: 8px 0;
+  font-size: 0.95em;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  border: 2px solid #dc3545;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  color: #721c24;
+  font-family: Arial, sans-serif;
+}
+
+.error-message h3 {
+  color: #721c24;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+}
+
+.error-message p {
+  margin: 8px 0;
+  font-size: 0.95em;
+}
+
+/* ===== STICKY POSITIONING (Content Protection) ===== */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1000;
+  background-color: white;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
