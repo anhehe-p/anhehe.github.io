@@ -347,9 +347,10 @@ Description: Patient Registration Form to create new patient account and obtain 
         <!-- Patient Information Section (Fetched via Fetch API) -->
         <div id="patient-info-container" style="margin: 20px; padding: 15px; background-color: #e8f4f8; border: 2px solid #4d311f; border-radius: 8px;"></div>
 
-        <!-- iFrame Container for Related Content -->
-        <div id="iframe-container" style="margin: 20px; padding: 15px; background-color: white; border: 2px solid #ccc; border-radius: 8px; display: none;">
-            <!-- iFrame content loads here -->
+        <!-- iFrame Container for Related Content (visible) -->
+        <div id="iframe-container" style="margin: 20px; padding: 15px; background-color: white; border: 2px solid #ccc; border-radius: 8px; display: block;">
+            <div style="font-weight: bold; margin-bottom: 8px;">Related Content (iFrame)</div>
+            <iframe src="patient-data.html" title="Patient Data" style="width:100%;height:360px;border:1px solid #ddd;border-radius:4px;"></iframe>
         </div>
 
         <div id="outputformdata"></div>
