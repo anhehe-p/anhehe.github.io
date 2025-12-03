@@ -430,12 +430,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ==================== COOKIE FUNCTIONS ====================
-// Set a cookie
-function setCookie(name, value, days = 7) {
+// Set a cookie with days parameter (default 2 days for security)
+function setCookie(name, value, days = 2) {
   const date = new Date();
   date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
   const expires = "expires=" + date.toUTCString();
   document.cookie = name + "=" + value + ";" + expires + ";path=/";
+  console.log(`Cookie set: ${name} = ${value}, expires in ${days} days`);
 }
 
 // Get a cookie
@@ -457,11 +458,42 @@ function deleteCookie(name) {
 }
 
 // ==================== LOCAL STORAGE FUNCTIONS ====================
-// Save form data to localStorage
+// Save form data to localStorage (only non-secure fields)
 function saveFormToLocalStorage() {
+  const rememberMe = document.getElementById("remember_me");
+  
+  // Only save if Remember Me is checked
+  if (rememberMe && !rememberMe.checked) {
+    clearAllData();
+    return;
+  }
+
   const form = document.getElementById("signup");
   const formData = new FormData(form);
-  const data = Object.fromEntries(formData);
+  const data = {};
+  
+  // Non-secure fields to save (exclude password fields)
+  const fieldsToSave = [
+    "first_name", "MI_initial", "last_name", "DOB", "email", 
+    "phone", "address_1", "address_2", "city", "state", "zip", 
+    "symptoms", "gender", "flu_vaccine", "diagnosis"
+  ];
+
+  fieldsToSave.forEach(field => {
+    const element = form.elements[field];
+    if (element) {
+      if (element.type === "checkbox") {
+        data[field] = element.checked ? element.value : "";
+      } else if (element.type === "radio") {
+        if (element.checked) {
+          data[field] = element.value;
+        }
+      } else {
+        data[field] = element.value;
+      }
+    }
+  });
+
   localStorage.setItem("patientFormData", JSON.stringify(data));
   localStorage.setItem("lastSaved", new Date().toLocaleString());
   console.log("Form data saved to localStorage");
@@ -471,23 +503,28 @@ function saveFormToLocalStorage() {
 function loadFormFromLocalStorage() {
   const savedData = localStorage.getItem("patientFormData");
   if (savedData) {
-    const data = JSON.parse(savedData);
-    const form = document.getElementById("signup");
-    
-    for (let key in data) {
-      const element = form.elements[key];
-      if (element) {
-        if (element.type === "checkbox" || element.type === "radio") {
-          if (element.value === data[key]) {
-            element.checked = true;
+    try {
+      const data = JSON.parse(savedData);
+      const form = document.getElementById("signup");
+      
+      for (let key in data) {
+        const element = form.elements[key];
+        if (element) {
+          if (element.type === "checkbox" || element.type === "radio") {
+            if (element.value === data[key]) {
+              element.checked = true;
+            }
+          } else {
+            element.value = data[key];
           }
-        } else {
-          element.value = data[key];
         }
       }
+      console.log("Form data loaded from localStorage");
+      return true;
+    } catch (error) {
+      console.error("Error loading localStorage data:", error);
+      return false;
     }
-    console.log("Form data loaded from localStorage");
-    return true;
   }
   return false;
 }
@@ -509,23 +546,7 @@ function displayLastSaved() {
 }
 
 // ==================== IFRAME FUNCTIONS ====================
-// Load content into iFrame
-async function loadIFrameContent() {
-  const iframeContainer = document.getElementById("iframe-container");
-  if (!iframeContainer) return;
-
-  try {
-    const response = await fetch("patient-data.html");
-    if (!response.ok) throw new Error("Failed to load iframe content");
-    const html = await response.text();
-    iframeContainer.innerHTML = html;
-  } catch (error) {
-    console.error("Error loading iframe:", error);
-    iframeContainer.innerHTML = `<p style="color: red;">Error loading content: ${error.message}</p>`;
-  }
-}
-
-// ==================== TIME-BASED EVENT ====================
+// ==================== IFRAME FUNCTIONS ====================
 // Auto-save form every 30 seconds
 function initializeAutoSave() {
   setInterval(function() {
@@ -584,21 +605,149 @@ async function fetchRelatedPatientInfo() {
   }
 }
 
+// ==================== TIME-BASED EVENT ====================
+// Update time dynamically in header
+function updateLiveTime() {
+  const todaySpan = document.getElementById("today");
+  if (todaySpan) {
+    const now = new Date();
+    const timeString = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+    todaySpan.innerHTML = timeString;
+  }
+}
+
+// Session timeout warning (25 minutes)
+let sessionTimeoutId;
+function initializeSessionTimeout() {
+  const timeoutMinutes = 25;
+  const timeoutMs = timeoutMinutes * 60 * 1000;
+
+  sessionTimeoutId = setTimeout(function() {
+    showSessionTimeoutWarning();
+  }, timeoutMs);
+}
+
+// Show warning modal when session about to expire
+function showSessionTimeoutWarning() {
+  const modal = document.createElement("div");
+  modal.id = "timeout-modal";
+  modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;";
+  modal.innerHTML = `
+    <div style="background: white; padding: 30px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+      <h2 style="color: #dc3545;">⏰ Session Timeout Warning</h2>
+      <p>Your session is about to expire in 5 minutes due to inactivity.</p>
+      <p>Click "Continue" to keep working or your form will be reset.</p>
+      <button onclick="continueSession()" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em;">Continue</button>
+      <button onclick="resetSession()" style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; margin-left: 10px;">Exit & Reset</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+// Continue the session
+function continueSession() {
+  const modal = document.getElementById("timeout-modal");
+  if (modal) modal.remove();
+  clearTimeout(sessionTimeoutId);
+  initializeSessionTimeout(); // Restart the timeout
+  console.log("Session continued");
+}
+
+// Reset session and clear data
+function resetSession() {
+  const modal = document.getElementById("timeout-modal");
+  if (modal) modal.remove();
+  clearTimeout(sessionTimeoutId);
+  document.getElementById("signup").reset();
+  clearAllData();
+  console.log("Session reset");
+}
+
+// ==================== WELCOME MESSAGE & NAME LOGIC ====================
+// Clear all cookies and localStorage
+function clearAllData() {
+  deleteCookie("firstName");
+  localStorage.removeItem("patientFormData");
+  localStorage.removeItem("lastSaved");
+  console.log("All data cleared");
+}
+
+// Display welcome message based on cookie
+function displayWelcomeMessage() {
+  const firstName = getCookie("firstName");
+  
+  let welcomeMessage = "";
+  if (firstName) {
+    welcomeMessage = `Welcome back, <strong>${firstName}</strong>!`;
+  } else {
+    welcomeMessage = `Welcome, <strong>New User</strong>!`;
+  }
+  
+  const welcomeDiv = document.createElement("div");
+  welcomeDiv.id = "welcome-message";
+  welcomeDiv.style.cssText = "background-color: #d1ecf1; color: #0c5460; padding: 12px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #bee5eb; font-weight: bold; text-align: center;";
+  welcomeDiv.innerHTML = welcomeMessage;
+  
+  const body = document.getElementById("body");
+  if (body && !document.getElementById("welcome-message")) {
+    body.insertBefore(welcomeDiv, body.firstChild);
+  }
+}
+
+// Show "Not [Name]?" link for returning users
+function displayNewUserLink() {
+  const firstName = getCookie("firstName");
+  if (!firstName) return;
+
+  const linkDiv = document.createElement("div");
+  linkDiv.id = "new-user-link";
+  linkDiv.style.cssText = "background-color: #e7f3ff; color: #004085; padding: 10px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #b8daff; text-align: center;";
+  linkDiv.innerHTML = `Not <strong>${firstName}</strong>? <a href="javascript:startAsNewUser()" style="color: #0056b3; text-decoration: underline; font-weight: bold;">Click here to start as a new user</a>`;
+  
+  const body = document.getElementById("body");
+  if (body && !document.getElementById("new-user-link")) {
+    body.insertBefore(linkDiv, body.firstChild.nextSibling);
+  }
+}
+
+// Start as new user - clear everything and reset
+function startAsNewUser() {
+  if (confirm("Are you sure? This will clear all your saved information.")) {
+    clearAllData();
+    document.getElementById("signup").reset();
+    location.reload();
+  }
+}
+
 // ==================== INITIALIZATION ====================
 document.addEventListener("DOMContentLoaded", function () {
-  // Load saved form data
-  loadFormFromLocalStorage();
-  displayLastSaved();
+  // Display welcome message
+  displayWelcomeMessage();
+  displayNewUserLink();
+
+  // Start live time update
+  updateLiveTime();
+  setInterval(updateLiveTime, 1000); // Update every second
+
+  // Check if first name exists and load form data
+  const firstName = getCookie("firstName");
+  if (firstName) {
+    loadFormFromLocalStorage();
+    displayLastSaved();
+  }
 
   // Set a cookie to track visits
   let visitCount = getCookie("visitCount");
   visitCount = visitCount ? parseInt(visitCount) + 1 : 1;
-  setCookie("visitCount", visitCount);
+  setCookie("visitCount", visitCount, 2); // 2 day expiry
   
   console.log("Total visits: " + visitCount);
 
   // Initialize auto-save
   initializeAutoSave();
+
+  // Initialize session timeout
+  initializeSessionTimeout();
 
   // Initialize time-based notification
   initializeTimeBasedNotification();
@@ -609,9 +758,45 @@ document.addEventListener("DOMContentLoaded", function () {
   // Fetch related patient information
   fetchRelatedPatientInfo();
 
-  // Add event listeners for localStorage saves
+  // Handle first name field change - save to cookie
+  const firstNameInput = document.getElementById("first_name");
+  if (firstNameInput) {
+    firstNameInput.addEventListener("change", function() {
+      if (this.value.trim()) {
+        setCookie("firstName", this.value.trim(), 2); // 2 day expiry
+        console.log("First name saved to cookie: " + this.value);
+        displayNewUserLink(); // Update the link if it was just set
+      }
+    });
+  }
+
+  // Handle Remember Me checkbox
+  const rememberMeCheckbox = document.getElementById("remember_me");
+  if (rememberMeCheckbox) {
+    rememberMeCheckbox.checked = true; // Default to checked
+    
+    rememberMeCheckbox.addEventListener("change", function() {
+      if (!this.checked) {
+        // If unchecked, clear all data
+        clearAllData();
+        document.getElementById("signup").reset();
+        console.log("Remember Me unchecked - data cleared");
+      } else {
+        // If checked, save the form data
+        saveFormToLocalStorage();
+        console.log("Remember Me checked - data saved");
+      }
+    });
+  }
+
+  // Add event listeners for localStorage saves on field change
   const form = document.getElementById("signup");
   if (form) {
-    form.addEventListener("change", saveFormToLocalStorage);
+    form.addEventListener("change", function() {
+      const rememberMe = document.getElementById("remember_me");
+      if (rememberMe && rememberMe.checked) {
+        saveFormToLocalStorage();
+      }
+    });
   }
 });
