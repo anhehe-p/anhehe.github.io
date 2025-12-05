@@ -47,7 +47,8 @@
   <script>
     (function(){
       const d = new Date();
-      let text = d.toLocaleDateString();
+      const pad = n => String(n).padStart(2, '0');
+      let text = `${pad(d.getMonth() + 1)}/${pad(d.getDate())}/${d.getFullYear()}`;
       document.getElementById("today").innerHTML = text;
 
       // Simple cookie parser for the header iframe (same-origin)
