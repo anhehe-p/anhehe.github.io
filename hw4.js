@@ -605,6 +605,63 @@ async function fetchRelatedPatientInfo() {
   }
 }
 
+// Fetch and populate State options (uses try/catch)
+async function loadStateOptions() {
+  const stateSelect = document.getElementById('state');
+  const errorDiv = document.getElementById('state-load-error');
+  if (!stateSelect) return;
+
+  try {
+    // Show a temporary loading option
+    const loadingOption = document.createElement('option');
+    loadingOption.value = '';
+    loadingOption.textContent = 'Loading states...';
+    loadingOption.disabled = true;
+    loadingOption.selected = true;
+    stateSelect.appendChild(loadingOption);
+
+    const response = await fetch('states.html', {cache: 'no-cache'});
+    if (!response.ok) throw new Error(`Failed to load states (status ${response.status})`);
+
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const fragmentSelect = doc.getElementById('state-select-fragment');
+
+    // Remove loading option
+    if (loadingOption && loadingOption.parentNode === stateSelect) {
+      stateSelect.removeChild(loadingOption);
+    }
+
+    if (fragmentSelect) {
+      // Replace options (keep the first placeholder if present)
+      const placeholder = stateSelect.querySelector('option[value=""]');
+      stateSelect.innerHTML = '';
+      if (placeholder) stateSelect.appendChild(placeholder);
+
+      // Append options from the fetched fragment
+      Array.from(fragmentSelect.options).forEach(opt => {
+        // skip the placeholder in fragment (it has empty value)
+        if (opt.value === '') return;
+        const newOpt = document.createElement('option');
+        newOpt.value = opt.value;
+        newOpt.textContent = opt.textContent;
+        stateSelect.appendChild(newOpt);
+      });
+
+      if (errorDiv) errorDiv.style.display = 'none';
+    } else {
+      throw new Error('States fragment not found in fetched file');
+    }
+  } catch (err) {
+    console.error('Error loading state options:', err);
+    if (errorDiv) {
+      errorDiv.style.display = 'block';
+      errorDiv.textContent = 'Could not load state list. Please select manually.';
+    }
+  }
+}
+
 // ==================== TIME-BASED EVENT ====================
 // Update time dynamically in header
 function updateLiveTime() {
@@ -754,6 +811,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Load iframe content
   loadIFrameContent();
+
+  // Load state options via Fetch (safe with try/catch)
+  loadStateOptions();
 
   // Fetch related patient information
   fetchRelatedPatientInfo();
