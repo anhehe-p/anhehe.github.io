@@ -791,6 +791,15 @@ document.addEventListener("DOMContentLoaded", function () {
   if (firstName) {
     loadFormFromLocalStorage();
     displayLastSaved();
+    // Prefill the first name field from cookie if empty
+    try {
+      const firstInput = document.getElementById('first_name');
+      if (firstInput && !firstInput.value) {
+        firstInput.value = decodeURIComponent(firstName);
+      }
+    } catch (e) {
+      console.warn('Could not prefill first name from cookie', e);
+    }
   }
 
   // Set a cookie to track visits
