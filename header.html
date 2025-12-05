@@ -40,23 +40,15 @@
           <a href="/anhehe.github.io/dashboard.html" style="margin-right:12px;color:#4d311f;font-weight:bold;text-decoration:none">📊 Dashboard</a>
           <a href="/anhehe.github.io/patient-data.html" style="color:#4d311f;font-weight:bold;text-decoration:none">📋 Patient Data</a>
         </div>
-        <div class="today">Date: <span id="today"> </span></div>
+        <div class="today">Today's Date: <span id="today"></span></div>
       </div>
     </div>
   </div>
   <script>
     (function(){
-      // Live date only (MM/DD/YYYY)
-      (function updateDate(){
-        const now = new Date();
-        const pad = n => String(n).padStart(2,'0');
-        const mm = pad(now.getMonth() + 1);
-        const dd = pad(now.getDate());
-        const yyyy = now.getFullYear();
-        const dateStr = `${mm}/${dd}/${yyyy}`;
-        const dateEl = document.getElementById('today');
-        if(dateEl) dateEl.textContent = dateStr;
-      })();
+      const d = new Date();
+      let text = d.toLocaleDateString();
+      document.getElementById("today").innerHTML = text;
 
       // Simple cookie parser for the header iframe (same-origin)
       function getCookie(name) {
