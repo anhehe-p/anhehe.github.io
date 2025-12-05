@@ -46,10 +46,14 @@
   </div>
   <script>
     (function(){
-      // Live date only (no time)
+      // Live date only (MM/DD/YYYY)
       (function updateDate(){
         const now = new Date();
-        const dateStr = now.toLocaleDateString();
+        const pad = n => String(n).padStart(2,'0');
+        const mm = pad(now.getMonth() + 1);
+        const dd = pad(now.getDate());
+        const yyyy = now.getFullYear();
+        const dateStr = `${mm}/${dd}/${yyyy}`;
         const dateEl = document.getElementById('today');
         if(dateEl) dateEl.textContent = dateStr;
       })();
