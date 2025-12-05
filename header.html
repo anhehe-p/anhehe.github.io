@@ -40,26 +40,19 @@
           <a href="/anhehe.github.io/dashboard.html" style="margin-right:12px;color:#4d311f;font-weight:bold;text-decoration:none">📊 Dashboard</a>
           <a href="/anhehe.github.io/patient-data.html" style="color:#4d311f;font-weight:bold;text-decoration:none">📋 Patient Data</a>
         </div>
-        <div class="today">Date: <span id="today"> </span> <span id="time"> </span></div>
+        <div class="today">Date: <span id="today"> </span></div>
       </div>
     </div>
   </div>
   <script>
     (function(){
-      // Live date and time (update every second)
-      function updateDateTime(){
+      // Live date only (no time)
+      (function updateDate(){
         const now = new Date();
         const dateStr = now.toLocaleDateString();
-        // Format hh:mm:ss with leading zeros
-        const pad = n => String(n).padStart(2,'0');
-        const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
         const dateEl = document.getElementById('today');
-        const timeEl = document.getElementById('time');
         if(dateEl) dateEl.textContent = dateStr;
-        if(timeEl) timeEl.textContent = timeStr;
-      }
-      updateDateTime();
-      setInterval(updateDateTime,1000);
+      })();
 
       // Simple cookie parser for the header iframe (same-origin)
       function getCookie(name) {
